@@ -1,0 +1,32 @@
+diff a/00 Doc/DV_RProject2.Rmd b/00 Doc/DV_RProject2.Rmd	(rejected hunks)
+@@ -0,0 +1,30 @@
++---
++title: "DV_RProject2"
++output: html_document
++---
++
++***Members:***
++Raymundo Cortez
++Yuyin Wang
++Chigozi Yejekwe
++
++###R_ETL
++
++
++
++
++
++
++
++
++```{r}
++summary(cars)
++```
++
++You can also embed plots, for example:
++
++```{r, echo=FALSE}
++plot(cars)
++```
++
++Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
