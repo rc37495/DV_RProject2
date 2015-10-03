@@ -67,79 +67,23 @@ img {
 <p><strong><em>Members:</em></strong> Raymundo Cortez Yuyin Wang Chigozi Yejekwe</p>
 <div id="r_etl" class="section level3">
 <h3>R_ETL</h3>
-<pre class="r"><code>setwd(&quot;~/DataVisualization/DV_RProject2/01 Data&quot;)
-file_path &lt;- &quot;pp-2015-part1.csv&quot;
-df &lt;- read.csv(file_path, stringsAsFactors = FALSE)
-
-# Replace &quot;.&quot; (i.e., period) with &quot;_&quot; in the column names.
-names(df) &lt;- gsub(&quot;\\.+&quot;, &quot;_&quot;, names(df))
-
-measures &lt;- c(&quot;Price&quot;)
-
-# Get rid of special characters in each column.
-for(n in names(df)) {
-    df[n] &lt;- data.frame(lapply(df[n], gsub, pattern=&quot;[^ -~]&quot;,replacement= &quot;&quot;))
-}
-
-dimensions &lt;- setdiff(names(df), measures)
-if( length(measures) &gt; 1 || ! is.na(dimensions)) {
-  for(d in dimensions) {
-    # Get rid of &quot; and ' in dimensions.
-    df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=&quot;[\&quot;']&quot;,replacement= &quot;&quot;))
-    # Change &amp; to and in dimensions.
-    df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=&quot;&amp;&quot;,replacement= &quot; and &quot;))
-    # Change : to ; in dimensions.
-    df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=&quot;:&quot;,replacement= &quot;;&quot;))
-  }
-}
-
-library(lubridate)
-# Fix date columns, this needs to be done by hand because | needs to be correct.
-#                                                        \_/
-df$Transfer_Date &lt;- gsub(&quot; [0-9]+:.*&quot;, &quot;&quot;, gsub(&quot; UTC&quot;, &quot;&quot;, mdy(as.character(df$Transfer_Date), tz=&quot;UTC&quot;)))</code></pre>
-<pre><code>## Warning: All formats failed to parse. No formats found.</code></pre>
-<pre class="r"><code># Get rid of all characters in measures except for numbers, the - sign, and period.dimensions
-if( length(measures) &gt; 1 || ! is.na(measures)) {
-  for(m in measures) {
-    df[m] &lt;- data.frame(lapply(df[m], gsub, pattern=&quot;[^--.0-9]&quot;,replacement= &quot;&quot;))
-  }
-}
-
-write.csv(df, paste(gsub(&quot;.csv&quot;, &quot;&quot;, file_path), &quot;.reformatted.csv&quot;, sep=&quot;&quot;), row.names=FALSE, na = &quot;&quot;)
-
-tableName &lt;- gsub(&quot; +&quot;, &quot;_&quot;, gsub(&quot;[^A-z, 0-9, ]&quot;, &quot;&quot;, gsub(&quot;.csv&quot;, &quot;&quot;, file_path)))
-sql &lt;- paste(&quot;CREATE TABLE&quot;, tableName, &quot;(\n-- Change table_name to the table name you want.\n&quot;)
-if( length(measures) &gt; 1 || ! is.na(dimensions)) {
-  for(d in dimensions) {
-    sql &lt;- paste(sql, paste(d, &quot;varchar2(4000),\n&quot;))
-  }
-}
-if( length(measures) &gt; 1 || ! is.na(measures)) {
-  for(m in measures) {
-    if(m != tail(measures, n=1)) sql &lt;- paste(sql, paste(m, &quot;number(38,4),\n&quot;))
-    else sql &lt;- paste(sql, paste(m, &quot;number(38,4)\n&quot;))
-  }
-}
-sql &lt;- paste(sql, &quot;);&quot;)
-cat(sql)</code></pre>
-<pre><code>## CREATE TABLE pp2015part1 (
-## -- Change table_name to the table name you want.
-##  ID varchar2(4000),
-##  Transfer_Date varchar2(4000),
-##  Postcode varchar2(4000),
-##  Property_Type varchar2(4000),
-##  Old_New varchar2(4000),
-##  Duration varchar2(4000),
-##  PAON varchar2(4000),
-##  SAON varchar2(4000),
-##  Street varchar2(4000),
-##  Locality varchar2(4000),
-##  Town_City varchar2(4000),
-##  District varchar2(4000),
-##  County varchar2(4000),
-##  Price number(38,4)
-##  );</code></pre>
+<p>setwd(“~/DataVisualization/DV_RProject2/01 Data”) file_path &lt;- “pp-2015-part1.csv” df &lt;- read.csv(file_path, stringsAsFactors = FALSE)</p>
 </div>
+<div id="replace-.-i.e.-period-with-_-in-the-column-names.-namesdf---gsub.-_-namesdf" class="section level1">
+<h1>Replace “.” (i.e., period) with “_&quot; in the column names. names(df) &lt;- gsub(“\.+”, “_“, names(df))</h1>
+<p>measures &lt;- c(“Price”)</p>
+</div>
+<div id="get-rid-of-special-characters-in-each-column." class="section level1">
+<h1>Get rid of special characters in each column.</h1>
+<p>for(n in names(df)) { df[n] &lt;- data.frame(lapply(df[n], gsub, pattern=“[^ -~]”,replacement= “”)) }</p>
+<p>dimensions &lt;- setdiff(names(df), measures) if( length(measures) &gt; 1 || ! is.na(dimensions)) { for(d in dimensions) { # Get rid of &quot; and ’ in dimensions. df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=“[&quot;’]”,replacement= “”)) # Change &amp; to and in dimensions. df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=“&amp;”,replacement= &quot; and “)) # Change : to ; in dimensions. df[d] &lt;- data.frame(lapply(df[d], gsub, pattern=”:“,replacement=”;“)) } }</p>
+<p>library(lubridate) # Fix date columns, this needs to be done by hand because | needs to be correct. # _/ df<span class="math">\(Transfer_Date &lt;- gsub(&quot; [0-9]+:.*&quot;, &quot;&quot;, gsub(&quot; UTC&quot;, &quot;&quot;, mdy(as.character(df\)</span>Transfer_Date), tz=“UTC”)))</p>
+</div>
+<div id="get-rid-of-all-characters-in-measures-except-for-numbers-the---sign-and-period.dimensions" class="section level1">
+<h1>Get rid of all characters in measures except for numbers, the - sign, and period.dimensions</h1>
+<p>if( length(measures) &gt; 1 || ! is.na(measures)) { for(m in measures) { df[m] &lt;- data.frame(lapply(df[m], gsub, pattern=“[^--.0-9]”,replacement= “”)) } }</p>
+<p>write.csv(df, paste(gsub(“.csv”, “”, file_path), “.reformatted.csv”, sep=“”), row.names=FALSE, na = “”)</p>
+<p>tableName &lt;- gsub(&quot; +“,”_“, gsub(”[^A-z, 0-9, ]“,”“, gsub(”.csv“,”“, file_path))) sql &lt;- paste(”CREATE TABLE“, tableName,”(– Change table_name to the table name you want.“) if( length(measures) &gt; 1 || ! is.na(dimensions)) { for(d in dimensions) { sql &lt;- paste(sql, paste(d,”varchar2(4000),“)) } } if( length(measures) &gt; 1 || ! is.na(measures)) { for(m in measures) { if(m != tail(measures, n=1)) sql &lt;- paste(sql, paste(m,”number(38,4),“)) else sql &lt;- paste(sql, paste(m,”number(38,4)“)) } } sql &lt;- paste(sql,”);“) cat(sql)</p>
 <div id="subset-and-summary" class="section level3">
 <h3>Subset and Summary</h3>
 <p>The data shows the residential property sales in England and Wales that are submitted to them for registration. The data was published in August 2014. Most column names are self explanatory save for a few. For Poperty Type; D = Detached, S = Semi-Detached, T = Terraced, F = Flats/Maisonettes. For Old_New; Y = a newly built property, N = an established residential building. For Duration; Relates to the tenure: F = Freehold, L-Leasehold. PAON stands for the Primary Addressable Object Name and SAON stands for Secondary Addressable Object Name.</p>
@@ -197,10 +141,6 @@ head(ndf)</code></pre>
 ## 
 ## Attaching package: 'dplyr'
 ## 
-## The following objects are masked from 'package:lubridate':
-## 
-##     intersect, setdiff, union
-## 
 ## The following objects are masked from 'package:stats':
 ## 
 ##     filter, lag
@@ -231,6 +171,7 @@ head(ndf)</code></pre>
 <p>The graph type is a density which depicts how many properties were valued at over a million British pounds. The data was separated by their age, the Old.New category. Finally, along the horizontal axis, lists the Property types; D = Detached, S = Semi-Detached, T = Terraced, F = Flats/Maisonettes. Finally, we ended out the graph by editting the graph labels such as increasing the plot title, etc..</p>
 <p>In conclusion, from the graph, we can see that the most expensive properties, by far, were Old D type properties. In addition, the older properties, regardless of type, were older than the new properties.</p>
 <pre class="r"><code>source(&quot;~/DataVisualization/DV_RProject2/03 Visualizations/workflow3.R&quot;)</code></pre>
+</div>
 </div>
 
 
