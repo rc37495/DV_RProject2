@@ -9,6 +9,7 @@ Yuyin Wang
 Chigozi Yejekwe
 
 ###R_ETL
+```
 setwd("~/DataVisualization/DV_RProject2/01 Data")
 file_path <- "pp-2015-part1.csv"
 df <- read.csv(file_path, stringsAsFactors = FALSE)
@@ -64,17 +65,22 @@ if( length(measures) > 1 || ! is.na(measures)) {
 }
 sql <- paste(sql, ");")
 cat(sql)
-
+```
 
 ###Subset and Summary
 The data shows the residential property sales in England and Wales that are submitted to them for registration. The data was published in August 2014. Most column names are self explanatory save for a few. For Poperty Type; D = Detached, S = Semi-Detached, T = Terraced, F = Flats/Maisonettes. For Old_New; Y = a newly built property, N = an established residential building. For Duration; Relates to the tenure: F = Freehold, L-Leasehold. PAON stands for the Primary Addressable Object Name and SAON stands for Secondary Addressable Object Name.
+
 ```{r}
 require(jsonlite)
 require(RCurl)
 
 ndf <- data.frame(fromJSON(getURL(URLencode('129.152.144.84:5001/rest/native/?query="select * from NEWPP2015PART1"'),httpheader=c(DB='jdbc:oracle:thin:@129.152.144.84:1521/PDBF15DV.usuniversi01134.oraclecloud.internal', USER='cs329e_rc37495', PASS='orcl_rc37495', MODE='native_mode', MODEL='model', returnDimensions = 'False', returnFor = 'JSON'), verbose = TRUE), ))
+
 head(ndf)
 ```
+
+ndf <- data.frame(fromJSON(getURL(URLencode('129.152.144.84:5001/rest/native/?query="select * from NEWPP2015PART1"'),httpheader=c(DB='jdbc:oracle:thin:@129.152.144.84:1521/PDBF15DV.usuniversi01134.oraclecloud.internal', USER='cs329e_rc37495', PASS='orcl_rc37495', MODE='native_mode', MODEL='model', returnDimensions = 'False', returnFor = 'JSON'), verbose = TRUE), ))
+
 
 ###Workflows and Graphs
 
@@ -83,9 +89,8 @@ head(ndf)
 This workflow focuses on the the Town/City, District, Price, and Old or New columns. Any Towns that are not in the "Leeds" district are then filtered out. It is then arranged by Old/New, so that when it is visualized, they are grouped together. The graph displays all the towns in the "Leeds" district and shows the price paid in residential properties sales across all of them. The colors pink and blue represent whether the property was already established or new, respectively.
 
 ndf %>% select(TOWN_CITY,DISTRICT,PRICE,OLD_NEW) %>% filter(DISTRICT == "LEEDS") %>% arrange(OLD_NEW) %>% ggplot(aes(x = TOWN_CITY, y = PRICE, colour = OLD_NEW)) + geom_bar(stat="identity") + labs(x = "Town/City",y = "Price",title="Leeds District") + theme(axis.text.x=element_text(angle=50,color="black"))
-```{r}
-source("~/DataVisualization/DV_RProject2/03 Visualizations/workflow1.R")
-```
+
+![](plot1.png)
 
 2)
 
@@ -111,9 +116,7 @@ While it was fairly expected that apartments and leaseholding have such a high r
 **Observation 2:**
 It also suprised us just how wide the spread of the cost in the top 0.1% of residential properties is, especially compared to the bottom 90% of residential properties. We expected an increase in spread of property price as we move up in price, but not one nearly this dramatic.
 
-```{r}
-source("~/DataVisualization/DV_RProject2/03 Visualizations/workflow2.R")
-```
+![](plot2.png)
 
 3)
 
@@ -125,6 +128,4 @@ The graph type is a density which depicts how many properties were valued at ove
 
 In conclusion, from the graph, we can see that the most expensive properties, by far, were Old D type properties. In addition, the older properties, regardless of type, were older than the new properties.
 
-```{r}
-source("~/DataVisualization/DV_RProject2/03 Visualizations/workflow3.R")
-```
+![](plot3.png)
