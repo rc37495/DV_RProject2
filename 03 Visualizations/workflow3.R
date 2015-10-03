@@ -1,0 +1,3 @@
+require(dplyr)
+require(ggplot2)
+ndf %>% group_by(OLD_NEW) %>% select(Property_Type, Price) %>% arrange(desc(Price)) %>% filter(Price > 1000000) %>% ggplot(aes(x = Property_Type)) + geom_density(aes(fill = OLD_NEW, alpha = .01)) + theme(panel.background = element_rect(fill = "gray99")) + theme(panel.grid.major = element_line(color = "blue", linetype = "dotted")) + theme(plot.background = element_rect(fill = "springgreen1")) + ggtitle("Old vs. New, What are the Most Expensive Properties in the UK?") + theme(plot.title = element_text(color = "steelblue4", size = 20)) + xlab("Property Types") + ylab("Density")
