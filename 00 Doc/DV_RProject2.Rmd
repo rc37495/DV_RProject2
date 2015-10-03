@@ -9,7 +9,6 @@ Yuyin Wang
 Chigozi Yejekwe
 
 ###R_ETL
-```{r}
 setwd("~/DataVisualization/DV_RProject2/01 Data")
 file_path <- "pp-2015-part1.csv"
 df <- read.csv(file_path, stringsAsFactors = FALSE)
@@ -65,7 +64,7 @@ if( length(measures) > 1 || ! is.na(measures)) {
 }
 sql <- paste(sql, ");")
 cat(sql)
-```
+
 
 ###Subset and Summary
 The data shows the residential property sales in England and Wales that are submitted to them for registration. The data was published in August 2014. Most column names are self explanatory save for a few. For Poperty Type; D = Detached, S = Semi-Detached, T = Terraced, F = Flats/Maisonettes. For Old_New; Y = a newly built property, N = an established residential building. For Duration; Relates to the tenure: F = Freehold, L-Leasehold. PAON stands for the Primary Addressable Object Name and SAON stands for Secondary Addressable Object Name.
